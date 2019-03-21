@@ -1,3 +1,0 @@
-'''
-Neural net module
-'''

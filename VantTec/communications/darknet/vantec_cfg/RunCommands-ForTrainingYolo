@@ -1,0 +1,386 @@
+###############################
+######## YOLO #################
+###############################
+
+# Training YOLO from scratch
+./darknet detector train vantec/cfg/obj.data vantec/cfg/yolo-vantec.cfg darknet19_448.conv.23
+
+# Training YOLO from checkpoint <filename>.weights
+./darknet detector train vantec/cfg/obj.data vantec/cfg/yolo-vantec.cfg vantec/weights/yolo-vantec_2000_loss_5.617185.weights
+
+
+# Testing YOLO from checkpoint <filename>.weights
+./darknet detector test vantec/cfg/obj.data vantec/cfg/yolo-vantec.cfg vantec/weights/yolo-vantec_3000_loss_3.869946.weights -thresh 0.25
+
+
+# Images for testing, correct images must be in path
+sample_img/15.jpg
+sample_img/18.jpg
+sample_img/23.jpg
+sample_img/24.jpg
+
+sample_img/1.jpg
+sample_img/2.jpg
+sample_img/3.jpg
+sample_img/4.jpg
+sample_img/5.jpg
+sample_img/6.jpg
+sample_img/7.jpg
+sample_img/8.jpg
+sample_img/9.jpg
+sample_img/10.jpg
+sample_img/11.jpg
+sample_img/12.jpg
+sample_img/13.jpg
+sample_img/14.jpg
+sample_img/15.jpg
+sample_img/16.jpg
+sample_img/17.jpg
+sample_img/18.jpg
+sample_img/19.jpg
+sample_img/20.jpg
+sample_img/21.jpg
+sample_img/22.jpg
+sample_img/23.jpg
+sample_img/24.jpg
+sample_img/train_1.jpg
+sample_img/train_2.jpg
+sample_img/train_3.jpg
+sample_img/train_4.jpg
+sample_img/train_5.jpg
+sample_img/train_6.jpg
+sample_img/train_7.jpg
+sample_img/train_8.jpg
+sample_img/train_9.jpg
+sample_img/train_10.jpg
+sample_img/train_11.jpg
+sample_img/train_12.jpg
+sample_img/train_13.jpg
+
+
+sample_img/25.jpg
+sample_img/26.jpg
+sample_img/27.jpg
+sample_img/28.jpg
+sample_img/29.jpg
+sample_img/30.jpg
+sample_img/31.jpg
+sample_img/32.jpg
+sample_img/33.jpg
+sample_img/34.jpg
+sample_img/35.jpg
+sample_img/36.jpg
+sample_img/37.jpg
+sample_img/38.jpg
+sample_img/39.jpg
+sample_img/40.jpg
+sample_img/41.jpg
+sample_img/42.jpg
+sample_img/43.jpg
+sample_img/44.jpg
+sample_img/45.jpg
+sample_img/46.jpg
+sample_img/47.jpg
+sample_img/48.jpg
+sample_img/49.jpg
+sample_img/50.jpg
+
+
+###############################
+##### Run Yolo on webcam ######
+###############################
+
+# Run webcam demo on checkpoint
+./darknet detector demo vantec/cfg/obj.data vantec/cfg/yolo-vantec.cfg vantec/weights/yolo-vantec.weights
+
+
+# Run webcam demo for Julo N
+./darknet detector demo vantec/cfg/obj.data vantec/cfg/yolo-vantec.cfg yolo-vantec.weights
+
+# Laptop
+./darknet detector demo vantec_cfg/obj.data vantec_cfg/yolo-vantec.cfg vantec_cfg/yolo-vantec.weights
+
+
+###############################
+######## Tiny-YOLO ############
+###############################
+
+# Training Tiny-YOLO from scratch
+./darknet detector train vantec/cfg/obj.data vantec/cfg/yolov2-tiny.cfg darknet19_448.conv.23
+
+# Training Tiny-YOLO from checkpoint <filename>.weights
+./darknet detector train vantec/cfg/obj.data vantec/cfg/yolov2-tiny.cfg vantec/weights/yolov2-tiny_10000_loss_8.279767.weights
+
+# Testing Tiny-YOLO from checkpoint <filename>.weights
+./darknet detector test vantec/cfg/obj.data vantec/cfg/yolov2-tiny.cfg vantec/weights/yolov2-tiny_3000_loss_69.116119.weights -thresh 0.25
+
+
+
+
+###############################
+# Training computer all night #
+# Take care which net you are training #
+###############################
+
+./darknet detector train vantec/cfg/obj.data vantec/cfg/yolo-vantec.cfg darknet19_448.conv.23
+mv vantec/weights vantec/weights24
+mkdir vantec/weights
+./darknet detector train vantec/cfg/obj.data vantec/cfg/yolov2-tiny.cfg darknet19_448.conv.23
+
+shutdown now
+
+###############################
+# Other useful commands #######
+###############################
+
+# Replace string of file-name in all files of current folder
+# Ex.     val4.txt     -->    train4.txt
+rename  's/val/train/' *
+
+rename  's/\./_val./' *
+
+# Remove _augmented string from files all files in current folder and move them to the top folder
+rename  's/_augmented//' *
+ls > to.txt
+xargs -a to.txt mv -t ..
+cd ..
+rm to.txt
+
+# Shuffle lines in file
+shuf val.txt > a.txt
+mv a.txt val.txt
+
+# Change label "0" for label "1" in all files in directory.
+find $pathToDir -name \*.txt -exec sed -i -e 's/^0 /1 /g' {} \;
+
+# Rename all images in folder incrmentally
+j=1;for i in *.jpg; do mv "$i" "$j"_val.jpg; let j=j+1;done
+
+# Loop trough all folders in directory
+for f in */ ; do
+echo ${f}
+ls ${f} | wc -l
+done
+
+
+
+
+###############################
+# Periodically monitor GPU Temp
+###############################
+# Every 5 minutes store GPU temp into a txt file
+watch -n 300 "nvidia-settings -tq gpucoretemp | head -n1 >> gpuTemp.txt"
+
+
+
+
+###############################
+# Create image location list ##
+###############################
+# Generate list of .jpg images in directory for yolo know where images are located
+
+pathName=./train
+cd $pathName
+pathName=${PWD##*/}
+ls > temp.txt
+mv temp.txt ..
+cd ..
+sed -i -E "s/(^.*\.txt)//g" temp.txt
+sed -i '/^\s*$/d' temp.txt
+sed -i -E "s/^/vantec\/dataset\/${pathName}\//g" temp.txt
+shuf temp.txt > ${pathName}.txt
+rm temp.txt 
+
+pathName=./val
+cd $pathName
+pathName=${PWD##*/}
+ls > temp.txt
+mv temp.txt ..
+cd ..
+sed -i -E "s/(^.*\.txt)//g" temp.txt
+sed -i '/^\s*$/d' temp.txt
+sed -i -E "s/^/vantec\/dataset\/${pathName}\//g" temp.txt
+shuf temp.txt > ${pathName}.txt
+rm temp.txt 
+
+
+
+########################################
+# Same script as above but with comments
+# Select the folder containing the images
+pathName=./train
+cd $pathName
+# Get the name of the folder, not the whole directory
+pathName=${PWD##*/}
+# Generate list of files in directory
+ls > temp.txt
+# Bring file to upper folder
+mv temp.txt ..
+cd ..
+# Remove all lines that end with .txt
+sed -i -E "s/(^.*\.txt)//g" temp.txt
+sed -i '/^\s*$/d' temp.txt
+# Append desired destiny directory to start of all lines
+sed -i -E "s/^/vantec\/dataset\/${pathName}\//g" temp.txt
+# Random order of lines in file
+shuf temp.txt > ${pathName}.txt
+rm temp.txt 
+
+
+
+
+
+
+###############################
+# Create and combine datasets #
+###############################
+# Folder containing al versions # V7 V8 V9
+# Folder containing train and val
+# Folders containing images, BGR,RGB,COCO_Balls
+for k in */ ; do
+    cd ${k}
+    for i in */ ; do
+        cd ${i}
+        for f in */ ; do
+          cd ${f}
+          folderName=${PWD##*/}
+          rename  "s/_augmented/_augmented_${folderName}/" *
+          ls > to.txt
+          xargs -a to.txt mv -t ..
+          cd ..
+          rmdir ${f}
+        done
+        rm to.txt
+
+        pathName=${PWD##*/}
+        ls > temp.txt
+        mv temp.txt ..
+        cd ..
+        sed -i -E "s/(^.*\.txt)//g" temp.txt
+        sed -i '/^\s*$/d' temp.txt
+        sed -i -E "s/^/vantec\/dataset\/${pathName}\//g" temp.txt
+        shuf temp.txt > ${pathName}.txt
+        rm temp.txt 
+    done
+    cd ..
+done
+
+
+
+
+
+
+
+
+###############################
+# Incremental weights folder ##
+###############################
+
+### Create incremental weight folder ###
+# If weights folder exists, move it to the next weight folder
+if [ -d "vantec/weights" ]; then
+  lastW=$(< vantec/lastWeight)
+  ((lastW++))
+  mv vantec/weights vantec/weights${lastW}
+  echo $lastW > vantec/lastWeight
+fi
+# Create new weight folder
+# Assign content of file to variable
+lastW=$(< vantec/lastWeight)
+((lastW++)) # increment numerical value
+mkdir vantec/weights${lastW}
+cp vantec/readme.txt vantec/weights${lastW}
+echo $lastW > vantec/lastWeight
+
+
+
+
+
+
+###############################
+#### Run Multiple Datases #####
+###############################
+
+# RUN MULTIPLE DATASETS, ONE AFTER ANOHER
+# Run from darknet directory
+
+########################
+# You must specify these variables
+########################
+# Indicate folders for training
+dirList="V18 V19 V20"
+
+# Path containing previous directories
+dirPath=vantec/dataset/SuperTesting 
+
+# Train yolo, tiny or both
+trainYolo=true # true false
+trainTiny=false # true false
+#trainNTimesFromZero=3
+
+##############################
+# Dont change this unless 
+# you know what you are doing
+##############################
+
+# If weights folder exists, move it to the next weight folder
+    if [ -d "vantec/weights" ]; then
+      lastW=$(< vantec/lastWeight)
+      ((lastW++))
+      mv vantec/weights vantec/weights${lastW}
+      echo $lastW > vantec/lastWeight
+    fi
+
+# Iterate trough all given folders for testing
+for f in ${dirList}; do 
+    
+    # Select train and val images, place in directory
+    mv $dirPath/$f/train vantec/dataset/train
+    mv $dirPath/$f/val vantec/dataset/val
+    cp $dirPath/$f/train.txt vantec/cfg
+    cp $dirPath/$f/val.txt vantec/cfg
+
+    # Train for normal yolo
+    if [ "$trainYolo" = true ] ; then
+        ### Create incremental weight folder ###
+        lastW=$(< vantec/lastWeight) # Get last folder name
+        ((lastW++)) # increment numerical value
+        mkdir vantec/weights${lastW}
+        cp vantec/readme.txt vantec/weights${lastW}
+        echo $lastW > vantec/lastWeight # store new number
+        # Store wich file is training the weights
+        echo $dirPath/$f >> vantec/weights${lastW}/readme.txt
+
+        # Train Yolo Net
+        mv vantec/weights${lastW} vantec/weights
+        ./darknet detector train vantec/cfg/obj.data vantec/cfg/yolo-vantec.cfg darknet19_448.conv.23
+        mv vantec/weights vantec/weights${lastW}
+    fi
+
+    # Train for tiny yolo
+    if [ "$trainTiny" = true ] ; then
+        ### Create incremental weight folder ###
+        lastW=$(< vantec/lastWeight)
+        ((lastW++)) # increment numerical value
+        mkdir vantec/weights${lastW}
+        cp vantec/readme.txt vantec/weights${lastW}
+        echo $lastW > vantec/lastWeight
+        # Store wich file is training the weights
+        echo $dirPath/$f >> vantec/weights${lastW}/readme.txt
+
+        # Train Tiny Net
+        mv vantec/weights${lastW} vantec/weights
+        ./darknet detector train vantec/cfg/obj.data vantec/cfg/yolov2-tiny.cfg darknet19_448.conv.23
+        mv vantec/weights vantec/weights${lastW}
+    fi
+
+    # Move back images to original folder
+    mv vantec/dataset/train $dirPath/$f/train
+    mv vantec/dataset/val $dirPath/$f/val
+    
+done;
+
+shutdown 
+
+
+

@@ -1,0 +1,5 @@
+classes = 2
+train = vantec_cfg/train_demo.txt
+valid = vantec_cfg/test_demo.txt
+names = vantec_cfg/obj.names
+backup = vantec_cfg/weights
