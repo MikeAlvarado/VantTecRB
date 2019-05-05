@@ -257,7 +257,7 @@ class MissionSetupActivity : AppCompatActivity() {
                                         .takeLast(count)
 
                                 for ((i, file) in latest.withIndex()) {
-                                    file.
+                                    //file.
                                 }
                             }
                         }
