@@ -45,9 +45,9 @@
 
         <!-- Here Maps -->
         <meta-data android:name="com.here.android.maps.appid"
-                   android:value=""/>
+                   android:value="ecmaM6f5rU8akAtRo4G3"/>
         <meta-data android:name="com.here.android.maps.apptoken"
-                   android:value=""/>
+                   android:value="2rqPwpNP3eb8zEP1KMZ6Ug"/>
         <meta-data android:name="com.here.android.maps.license.key"
                    android:value=""/>
 
@@ -65,7 +65,7 @@
         <!-- Google Maps -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value=""/>
+            android:value="AIzaSyB8YlKGL_DNhpQEyTfe_646lj_b15UBGdM"/>
 
         <!-- AMaps -->
         <meta-data

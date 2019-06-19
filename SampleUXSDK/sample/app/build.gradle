@@ -63,7 +63,7 @@ dependencies {
     implementation ('com.dji:dji-uxsdk:4.10', {
         // Uncomment the following line if your app does not need Anti Distortion for
         // Mavic 2 Pro and Mavic 2 Zoom. It will greatly reducing the size of the APK:
-        // exclude module: 'library-anti-distortion'
+        exclude module: 'library-anti-distortion'
     })
     compileOnly ('com.dji:dji-sdk-provided:4.10')
 
